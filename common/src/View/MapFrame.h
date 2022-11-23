@@ -206,6 +206,7 @@ public:
   bool revertDocument();
   bool exportDocumentAsObj();
   bool exportDocumentAsMap();
+  bool exportDocumentAsHaru();
   bool exportDocument(const IO::ExportOptions& options);
 
 private:

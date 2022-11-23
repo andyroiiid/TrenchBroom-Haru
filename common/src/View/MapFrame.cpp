@@ -1135,6 +1135,24 @@ bool MapFrame::exportDocumentAsMap()
   return exportDocument(options);
 }
 
+bool MapFrame::exportDocumentAsHaru()
+{
+  const IO::Path& originalPath = m_document->path().deleteExtension();
+
+  const QString newFileName = QFileDialog::getSaveFileName(
+    this,
+    tr("Export Haru Map file"),
+    IO::pathAsQString(originalPath),
+    "Haru Map files (*.haru)");
+  if (newFileName.isEmpty())
+  {
+    return false;
+  }
+
+  const auto options = IO::HaruExportOptions{IO::pathFromQString(newFileName)};
+  return exportDocument(options);
+}
+
 bool MapFrame::exportDocument(const IO::ExportOptions& options)
 {
   const auto exportPath = std::visit([](const auto& o) { return o.exportPath; }, options);

@@ -75,6 +75,7 @@ set(COMMON_SOURCE
         ${COMMON_SOURCE_DIR}/IO/NodeWriter.cpp
         ${COMMON_SOURCE_DIR}/IO/ObjParser.cpp
         ${COMMON_SOURCE_DIR}/IO/ObjSerializer.cpp
+        ${COMMON_SOURCE_DIR}/IO/HaruSerializer.cpp
         ${COMMON_SOURCE_DIR}/IO/ParserStatus.cpp
         ${COMMON_SOURCE_DIR}/IO/Path.cpp
         ${COMMON_SOURCE_DIR}/IO/PathQt.cpp
@@ -562,6 +563,7 @@ set(COMMON_HEADER
         ${COMMON_SOURCE_DIR}/IO/NodeWriter.h
         ${COMMON_SOURCE_DIR}/IO/ObjParser.h
         ${COMMON_SOURCE_DIR}/IO/ObjSerializer.h
+        ${COMMON_SOURCE_DIR}/IO/HaruSerializer.h
         ${COMMON_SOURCE_DIR}/IO/Parser.h
         ${COMMON_SOURCE_DIR}/IO/ParserStatus.h
         ${COMMON_SOURCE_DIR}/IO/Path.h
@@ -1065,22 +1067,22 @@ if (NOT TB_SUPPRESS_PCH AND ${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
             <QStringBuilder>
             <QVBoxLayout>
             <QWidget>
-    )
-else()
+            )
+else ()
     message(STATUS "Not using precompiled headers")
-endif()
+endif ()
 
 # Organize files into IDE folders
 source_group(TREE "${COMMON_SOURCE_DIR}" FILES ${COMMON_SOURCE} ${COMMON_HEADER})
 
-if(WIN32)
+if (WIN32)
     target_link_libraries(common PRIVATE stackwalker)
-endif()
+endif ()
 
-if(APPLE)
+if (APPLE)
     # Silence macOS OpenGL deprecation warnings
     target_compile_definitions(common PUBLIC GL_SILENCE_DEPRECATION)
-endif()
+endif ()
 
 set_compiler_config(common)
 

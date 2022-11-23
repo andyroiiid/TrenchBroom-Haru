@@ -53,7 +53,14 @@ struct ObjExportOptions
   kdl_reflect_decl(ObjExportOptions, exportPath, mtlPathMode);
 };
 
-using ExportOptions = std::variant<MapExportOptions, ObjExportOptions>;
+struct HaruExportOptions
+{
+  Path exportPath;
+
+  kdl_reflect_decl(HaruExportOptions, exportPath);
+};
+
+using ExportOptions = std::variant<MapExportOptions, ObjExportOptions, HaruExportOptions>;
 
 std::ostream& operator<<(std::ostream& lhs, const ExportOptions& rhs);
 } // namespace IO

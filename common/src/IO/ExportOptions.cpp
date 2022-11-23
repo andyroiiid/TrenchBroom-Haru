@@ -50,6 +50,8 @@ std::ostream& operator<<(std::ostream& lhs, const ObjMtlPathMode rhs)
 
 kdl_reflect_impl(ObjExportOptions);
 
+kdl_reflect_impl(HaruExportOptions);
+
 std::ostream& operator<<(std::ostream& lhs, const ExportOptions& rhs)
 {
   std::visit([&](const auto& o) { lhs << o; }, rhs);

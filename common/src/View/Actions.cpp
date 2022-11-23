@@ -1076,6 +1076,12 @@ void ActionManager::createFileMenu()
     IO::Path(),
     QObject::tr("Exports the current map to a .map file. Layers marked Omit From Export "
                 "will be omitted.")));
+  exportMenu.addItem(createMenuAction(
+    IO::Path("Menu/File/Export/Haru..."),
+    QObject::tr("Haru..."),
+    0,
+    [](ActionExecutionContext& context) { context.frame()->exportDocumentAsHaru(); },
+    [](ActionExecutionContext& context) { return context.hasDocument(); }));
 
   /* ========== File Menu (Associated Resources) ========== */
   fileMenu.addSeparator();

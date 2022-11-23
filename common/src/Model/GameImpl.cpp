@@ -38,6 +38,7 @@
 #include "IO/File.h"
 #include "IO/FileMatcher.h"
 #include "IO/GameConfigParser.h"
+#include "IO/HaruSerializer.h"
 #include "IO/IOUtils.h"
 #include "IO/ImageSpriteParser.h"
 #include "IO/Md2Parser.h"
@@ -274,6 +275,19 @@ void GameImpl::doExportMap(WorldNode& world, const IO::ExportOptions& options) c
 {
   std::visit(
     kdl::overload(
+      [&](const IO::HaruExportOptions& haruOptions) {
+        auto haruFile = openPathAsOutputStream(haruOptions.exportPath);
+        if (!haruFile)
+        {
+          throw FileSystemException{
+            "Cannot open file: " + haruOptions.exportPath.asString()};
+        }
+
+        auto writer =
+          IO::NodeWriter{world, std::make_unique<IO::HaruSerializer>(haruFile)};
+        writer.setExporting(true);
+        writer.writeMap();
+      },
       [&](const IO::ObjExportOptions& objOptions) {
         auto objFile = openPathAsOutputStream(objOptions.exportPath);
         if (!objFile)
