@@ -88,10 +88,12 @@ HaruSerializer::BrushSerializer::BrushSerializer(const Model::Brush& brush)
   for (const auto& brushFace : brush.faces())
   {
     Face& face = faces.emplace_back();
+    face.texture = brushFace.texture()->name();
     face.normal = Direction(brushFace.normal());
     for (const auto& vertex : brushFace.vertices())
     {
-      face.vertices.emplace_back(vertex->position());
+      face.vertices.emplace_back(
+        vertex->position(), brushFace.textureCoords(vertex->position()));
     }
   }
 }
@@ -112,11 +114,20 @@ void HaruSerializer::BrushSerializer::serialize(std::ostream& outputStream) cons
   {
     for (const auto& face : faces)
     {
+      write("{}\n", face.texture);
       write("{} {} {}\n", face.normal.x, face.normal.y, face.normal.z);
       write("{}\n", face.vertices.size());
       for (const auto& vertex : face.vertices)
       {
-        write("{} {} {}\n", vertex.x, vertex.y, vertex.z);
+        const auto& position = vertex.position;
+        const auto& textureCoord = vertex.textureCoord;
+        write(
+          "{} {} {} {} {}\n",
+          position.x,
+          position.y,
+          position.z,
+          textureCoord.u,
+          textureCoord.v);
       }
     }
   }

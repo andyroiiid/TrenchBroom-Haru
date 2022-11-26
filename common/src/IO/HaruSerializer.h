@@ -48,6 +48,20 @@ private:
     }
   };
 
+  struct TextureCoord
+  {
+    float u = 0.0f;
+    float v = 0.0f;
+
+    TextureCoord() = default;
+
+    explicit TextureCoord(const vm::vec2f& v)
+      : u(v.x())
+      , v(v.y())
+    {
+    }
+  };
+
   struct Position : Vec3
   {
     Position() = default;
@@ -58,6 +72,20 @@ private:
       x /= 32.0f;
       y /= 32.0f;
       z /= 32.0f;
+    }
+  };
+
+  struct Vertex
+  {
+    Position position;
+    TextureCoord textureCoord;
+
+    Vertex() = default;
+
+    explicit Vertex(const vm::vec3& position, const vm::vec2f& textureCoord)
+      : position(position)
+      , textureCoord(textureCoord)
+    {
     }
   };
 
@@ -73,8 +101,9 @@ private:
 
   struct Face
   {
+    std::string texture;
     Direction normal;
-    std::vector<Position> vertices;
+    std::vector<Vertex> vertices;
   };
 
   struct BrushSerializer
