@@ -3,3 +3,7 @@
 @baseclass size(-16 -16 -32, 16 16 32) color(0 255 0) = PlayerClass []
 
 @PointClass base(PlayerClass) = info_player_start : "Player start" []
+
+@baseclass size(-8 -8 -8, 8 8 8) color(255 0 0) model({ "path": "models/suzanne.mdl" }) = SuzanneClass []
+
+@PointClass base(SuzanneClass) = props_suzanne : "Suzanne test model" []
