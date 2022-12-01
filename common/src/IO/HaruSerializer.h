@@ -3,6 +3,7 @@
 
 #include "IO/NodeSerializer.h"
 
+#include <sstream>
 #include <FloatType.h>
 #include <fmt/format.h>
 #include <vecmath/vec.h>
@@ -133,8 +134,11 @@ private:
   void doPatch(const Model::PatchNode* patchNode) override;
 
   std::ostream& m_outputStream;
+  std::stringstream m_outputStringStream;
+  size_t m_numEntities = 0;
 
-  std::vector<BrushSerializer> m_brushes;
+  std::map<std::string, std::string> m_currentProperties;
+  std::vector<BrushSerializer> m_currentBrushes;
 };
 } // namespace IO
 } // namespace TrenchBroom

@@ -276,7 +276,7 @@ void GameImpl::doExportMap(WorldNode& world, const IO::ExportOptions& options) c
   std::visit(
     kdl::overload(
       [&](const IO::HaruExportOptions& haruOptions) {
-        auto haruFile = openPathAsOutputStream(haruOptions.exportPath);
+        auto haruFile = openPathAsOutputStream(haruOptions.exportPath, std::ios::binary);
         if (!haruFile)
         {
           throw FileSystemException{

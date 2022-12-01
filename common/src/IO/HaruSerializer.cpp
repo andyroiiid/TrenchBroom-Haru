@@ -23,52 +23,60 @@ HaruSerializer::HaruSerializer(std::ostream& outputStream)
   ensure(m_outputStream.good(), "output stream is good");
 }
 
+#define write(format, ...)                                                               \
+  fmt::format_to(std::ostreambuf_iterator<char>(m_outputStream), format, __VA_ARGS__)
 
-void HaruSerializer::doBeginFile(const std::vector<const Model::Node*>& rootNodes)
-{
-  //  WRITE("begin file\n");
-}
+void HaruSerializer::doBeginFile(const std::vector<const Model::Node*>& rootNodes) {}
 
 
 void HaruSerializer::doEndFile()
 {
-#define write(format, ...)                                                               \
-  fmt::format_to(std::ostreambuf_iterator<char>(m_outputStream), format, __VA_ARGS__)
-
-  write("{}\n", m_brushes.size());
-
-  for (const auto& brush : m_brushes)
-  {
-    brush.serialize(m_outputStream);
-  }
+  write("{}\n", m_numEntities);
+  m_outputStream << m_outputStringStream.rdbuf();
+}
 
 #undef write
-}
 
+#define write(format, ...)                                                               \
+  fmt::format_to(                                                                        \
+    std::ostreambuf_iterator<char>(m_outputStringStream), format, __VA_ARGS__)
 
-void HaruSerializer::doBeginEntity(const Model::Node* node)
-{
-  //  WRITE("begin entity {}\n", node->name());
-}
+void HaruSerializer::doBeginEntity(const Model::Node* node) {}
 
 
 void HaruSerializer::doEndEntity(const Model::Node* node)
 {
-  //  WRITE("end entity {}\n", node->name());
+  write("{}\n", m_currentProperties.size());
+  for (const auto& [key, value] : m_currentProperties)
+  {
+    write("{}\n", key);
+    write("{}\n", value);
+  }
+  m_currentProperties.clear();
+
+  write("{}\n", m_currentBrushes.size());
+  for (const auto& brush : m_currentBrushes)
+  {
+    brush.serialize(m_outputStringStream);
+  }
+  m_currentBrushes.clear();
+
+  m_numEntities++;
 }
 
 
 void HaruSerializer::doEntityProperty(const Model::EntityProperty& property)
 {
-  //  WRITE("{}: {}\n", property.key(), property.value());
+  m_currentProperties[property.key()] = property.value();
 }
 
 
 void HaruSerializer::doBrush(const Model::BrushNode* brush)
 {
-  m_brushes.emplace_back(brush->brush());
+  m_currentBrushes.emplace_back(brush->brush());
 }
 
+#undef write
 
 void HaruSerializer::doBrushFace(const Model::BrushFace& face) {}
 
@@ -107,28 +115,30 @@ void HaruSerializer::BrushSerializer::serialize(std::ostream& outputStream) cons
   write("{}\n", vertices.size());
   for (const auto& vertex : vertices)
   {
-    write("{} {} {}\n", vertex.x, vertex.y, vertex.z);
+    write("{} {} {} ", vertex.x, vertex.y, vertex.z);
   }
+  write("\n");
 
   write("{}\n", faces.size());
   {
     for (const auto& face : faces)
     {
-      write("{}\n", face.texture);
-      write("{} {} {}\n", face.normal.x, face.normal.y, face.normal.z);
-      write("{}\n", face.vertices.size());
+      write("{} ", face.texture);
+      write("{} {} {} ", face.normal.x, face.normal.y, face.normal.z);
+      write("{} ", face.vertices.size());
       for (const auto& vertex : face.vertices)
       {
         const auto& position = vertex.position;
         const auto& textureCoord = vertex.textureCoord;
         write(
-          "{} {} {} {} {}\n",
+          "{} {} {} {} {} ",
           position.x,
           position.y,
           position.z,
           textureCoord.u,
           textureCoord.v);
       }
+      write("\n");
     }
   }
 
