@@ -245,6 +245,16 @@ add_executable(TrenchBroom WIN32 MACOSX_BUNDLE)
 target_sources(TrenchBroom PRIVATE ${APP_SOURCE} ${INDEX_OUTPUT_PATH} ${DOC_MANUAL_TARGET_FILES_ABSOLUTE} ${DOC_MANUAL_SHORTCUTS_JS_TARGET_ABSOLUTE} ${DOC_MANUAL_TARGET_IMAGE_FILES_ABSOLUTE})
 configure_app_target(TrenchBroom YES)
 
+add_custom_target(CopyGamesResources)
+add_custom_command(TARGET CopyGamesResources POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E rm -rf "${APP_RESOURCE_DEST_DIR}/defaults")
+add_custom_command(TARGET CopyGamesResources POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${APP_RESOURCE_DIR}/defaults/" "${APP_RESOURCE_DEST_DIR}/defaults")
+add_custom_command(TARGET CopyGamesResources POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E rm -rf "${APP_RESOURCE_DEST_DIR}/games")
+add_custom_command(TARGET CopyGamesResources POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${APP_RESOURCE_DIR}/games/" "${APP_RESOURCE_DEST_DIR}/games")
+
 add_executable(TrenchBroom-nomanual WIN32 MACOSX_BUNDLE EXCLUDE_FROM_ALL)
 target_sources(TrenchBroom-nomanual PRIVATE ${APP_SOURCE})
 configure_app_target(TrenchBroom-nomanual NO)

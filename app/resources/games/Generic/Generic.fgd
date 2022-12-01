@@ -4,6 +4,14 @@
 
 @PointClass base(PlayerClass) = info_player_start : "Player start" []
 
-@baseclass size(-8 -8 -8, 8 8 8) color(255 0 0) model({ "path": "models/suzanne.mdl" }) = SuzanneClass []
-
-@PointClass base(SuzanneClass) = props_suzanne : "Suzanne test model" []
+@PointClass size(-16 -16 -16, 16 16 16) color(255 0 0) model(
+    {
+        "path": model,
+        "skin": skin,
+        "frame": frame
+    }
+) = prop_static : "Static Prop" [
+    model(string) : "Model Path" : "models/prop.mdl"
+    skin(integer) : "Model Skin" : 0
+    frame(integer) : "Model Frame" : 0
+]
