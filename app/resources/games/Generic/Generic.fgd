@@ -2,15 +2,14 @@
 
 @baseclass size(-16 -16 -32, 16 16 32) color(0 255 0) = PlayerClass []
 
-@PointClass base(PlayerClass) = info_player_start : "Player start" []
+@PointClass base(PlayerClass) = info_player_start : "Player Start" []
 
-@PointClass size(-16 -16 -16, 16 16 16) color(255 0 0) model(
-    {
-        "path": model,
-        "skin": skin,
-        "frame": frame
-    }
-) = prop_static : "Static Prop" [
+@PointClass size(-16 -16 -16, 16 16 16) color(255 255 0) = light_point : "Point Light" [
+    color(string) : "Light Color" : "1.0 1.0 1.0"
+    range(integer) : "Light Range" : 20
+]
+
+@PointClass size(-16 -16 -16, 16 16 16) color(255 0 0) model({"path": model, "skin": skin, "frame": frame}) = prop_static : "Static Prop" [
     model(string) : "Model Path" : "models/prop.mdl"
     skin(integer) : "Model Skin" : 0
     frame(integer) : "Model Frame" : 0
