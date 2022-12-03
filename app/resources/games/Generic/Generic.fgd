@@ -16,3 +16,7 @@
 ]
 
 @SolidClass = func_brush : "Brush" []
+
+@SolidClass = func_phys : "Physics Brush" []
+
+@SolidClass = func_test : "Test Brush" []
