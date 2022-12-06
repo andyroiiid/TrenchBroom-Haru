@@ -19,4 +19,7 @@
 
 @SolidClass = func_phys : "Physics Brush" []
 
-@SolidClass = func_test : "Test Brush" []
+@SolidClass = func_move : "Movable Brush" [
+    move_speed(string) : "Move Speed" : "0.0 1.0 0.0"
+    move_time(float) : "Move Time" : 1.0
+]
