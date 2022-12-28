@@ -9,12 +9,6 @@
     range(integer) : "Light Range" : 20
 ]
 
-@PointClass size(-16 -16 -16, 16 16 16) color(255 0 0) model({"path": model, "skin": skin, "frame": frame}) = prop_static : "Static Prop" [
-    model(string) : "Model Path" : "models/prop.mdl"
-    skin(integer) : "Model Skin" : 0
-    frame(integer) : "Model Frame" : 0
-]
-
 @SolidClass = func_brush : "Brush" []
 
 @SolidClass = func_phys : "Physics Brush" []

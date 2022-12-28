@@ -9,52 +9,69 @@
 #include "Model/PatchNode.h"
 #include "Model/Polyhedron.h"
 
-#include <fmt/format.h>
-
 namespace TrenchBroom
 {
 namespace IO
 {
 
+static void write(std::ostream& stream, uint8_t data)
+{
+  const char* pData = reinterpret_cast<const char*>(&data);
+  stream.write(pData, sizeof(uint8_t));
+}
+
+static void write(std::ostream& stream, size_t originalData)
+{
+  ensure(originalData <= UINT16_MAX, "size_t too large for serialization (max 65535)");
+  uint16_t data = originalData;
+  const char* pData = reinterpret_cast<const char*>(&data);
+  stream.write(pData, sizeof(uint16_t));
+}
+
+static void write(std::ostream& stream, float data)
+{
+  const char* pData = reinterpret_cast<const char*>(&data);
+  stream.write(pData, sizeof(float));
+}
+
+static void write(std::ostream& stream, const std::string& data)
+{
+  ensure(data.size() < 256, "string too long for serialization");
+  write(stream, static_cast<uint8_t>(data.size()));
+  stream.write(data.data(), data.size());
+}
+
 
 HaruSerializer::HaruSerializer(std::ostream& outputStream)
   : m_outputStream(outputStream)
 {
-  ensure(m_outputStream.good(), "output stream is good");
+  ensure(m_outputStream.good(), "output stream is bad");
 }
-
-#define write(format, ...)                                                               \
-  fmt::format_to(std::ostreambuf_iterator<char>(m_outputStream), format, __VA_ARGS__)
 
 void HaruSerializer::doBeginFile(const std::vector<const Model::Node*>& rootNodes) {}
 
 
 void HaruSerializer::doEndFile()
 {
-  write("{}\n", m_numEntities);
+  write(m_outputStream, m_numEntities);
   m_outputStream << m_outputStringStream.rdbuf();
 }
 
-#undef write
-
-#define write(format, ...)                                                               \
-  fmt::format_to(                                                                        \
-    std::ostreambuf_iterator<char>(m_outputStringStream), format, __VA_ARGS__)
 
 void HaruSerializer::doBeginEntity(const Model::Node* node) {}
 
 
 void HaruSerializer::doEndEntity(const Model::Node* node)
 {
-  write("{}\n", m_currentProperties.size());
+  write(m_outputStringStream, m_currentProperties.size());
   for (const auto& [key, value] : m_currentProperties)
   {
-    write("{}\n", key);
-    write("{}\n", value);
+    write(m_outputStringStream, key);
+    write(m_outputStringStream, value);
   }
   m_currentProperties.clear();
 
-  write("{}\n", m_currentBrushes.size());
+  write(m_outputStringStream, m_currentBrushes.size());
   for (const auto& brush : m_currentBrushes)
   {
     brush.serialize(m_outputStringStream);
@@ -75,8 +92,6 @@ void HaruSerializer::doBrush(const Model::BrushNode* brush)
 {
   m_currentBrushes.emplace_back(brush->brush());
 }
-
-#undef write
 
 void HaruSerializer::doBrushFace(const Model::BrushFace& face) {}
 
@@ -109,40 +124,35 @@ HaruSerializer::BrushSerializer::BrushSerializer(const Model::Brush& brush)
 
 void HaruSerializer::BrushSerializer::serialize(std::ostream& outputStream) const
 {
-#define write(format, ...)                                                               \
-  fmt::format_to(std::ostreambuf_iterator<char>(outputStream), format, __VA_ARGS__)
-
-  write("{}\n", vertices.size());
+  write(outputStream, vertices.size());
   for (const auto& vertex : vertices)
   {
-    write("{} {} {} ", vertex.x, vertex.y, vertex.z);
+    write(outputStream, vertex.x);
+    write(outputStream, vertex.y);
+    write(outputStream, vertex.z);
   }
-  write("\n");
 
-  write("{}\n", faces.size());
+  write(outputStream, faces.size());
   {
     for (const auto& face : faces)
     {
-      write("{} ", face.texture);
-      write("{} {} {} ", face.normal.x, face.normal.y, face.normal.z);
-      write("{} ", face.vertices.size());
+      write(outputStream, face.texture);
+      write(outputStream, face.normal.x);
+      write(outputStream, face.normal.y);
+      write(outputStream, face.normal.z);
+      write(outputStream, face.vertices.size());
       for (const auto& vertex : face.vertices)
       {
         const auto& position = vertex.position;
         const auto& textureCoord = vertex.textureCoord;
-        write(
-          "{} {} {} {} {} ",
-          position.x,
-          position.y,
-          position.z,
-          textureCoord.u,
-          textureCoord.v);
+        write(outputStream, position.x);
+        write(outputStream, position.y);
+        write(outputStream, position.z);
+        write(outputStream, textureCoord.u);
+        write(outputStream, textureCoord.v);
       }
-      write("\n");
     }
   }
-
-#undef write
 }
 
 

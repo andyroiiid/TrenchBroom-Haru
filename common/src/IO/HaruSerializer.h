@@ -3,9 +3,9 @@
 
 #include "IO/NodeSerializer.h"
 
-#include <sstream>
 #include <FloatType.h>
 #include <fmt/format.h>
+#include <sstream>
 #include <vecmath/vec.h>
 
 namespace TrenchBroom
@@ -44,7 +44,7 @@ private:
     explicit Vec3(const vm::vec3& v)
       : x(v.x())
       , y(v.z())
-      , z(-v.y())
+      , z(v.y())
     {
     }
   };
