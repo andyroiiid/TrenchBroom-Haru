@@ -84,6 +84,11 @@ void HaruSerializer::doEndEntity(const Model::Node* node)
 
 void HaruSerializer::doEntityProperty(const Model::EntityProperty& property)
 {
+  if (property.key().substr(0, 3) == "_tb")
+  {
+    // ignore Trenchbroom internal data
+    return;
+  }
   m_currentProperties[property.key()] = property.value();
 }
 
