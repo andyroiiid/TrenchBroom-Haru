@@ -58,7 +58,7 @@ private:
 
     explicit TextureCoord(const vm::vec2f& v)
       : u(v.x())
-      , v(v.y())
+      , v(-v.y())
     {
     }
   };
