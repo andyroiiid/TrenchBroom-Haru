@@ -4,7 +4,12 @@
     script(string) : "Level Script"
 ]
 
-@baseclass size(-16 -16 -32, 16 16 32) color(0 255 0) = PlayerClass []
+@BaseClass size(-16 -16 -32, 16 16 32) color(0 255 0) = PlayerClass []
+
+@BaseClass = MoveLinear [
+    move_speed(string) : "Move Speed" : "0.0 1.0 0.0"
+    move_time(float) : "Move Time" : 1.0
+]
 
 @PointClass base(PlayerClass) = info_player_start : "Player Start" []
 
@@ -15,9 +20,10 @@
 
 @SolidClass = func_brush : "Brush" []
 
-@SolidClass = func_phys : "Physics Brush" []
+@SolidClass base(MoveLinear) = func_move : "Movable Brush" []
 
-@SolidClass = func_move : "Movable Brush" [
-    move_speed(string) : "Move Speed" : "0.0 1.0 0.0"
-    move_time(float) : "Move Time" : 1.0
+@SolidClass base(MoveLinear) = func_button : "Button Brush" [
+    event(string) : "Event" : "onPressed"
 ]
+
+@SolidClass = func_phys : "Physics Brush" []
