@@ -20,7 +20,9 @@
 
 @SolidClass = func_brush : "Brush" []
 
-@SolidClass base(MoveLinear) = func_move : "Movable Brush" []
+@SolidClass base(MoveLinear) = func_move : "Movable Brush" [
+    name(string) : "Name"
+]
 
 @SolidClass base(MoveLinear) = func_button : "Button Brush" [
     event(string) : "Event" : "onPressed"
