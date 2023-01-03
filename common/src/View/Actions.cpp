@@ -1079,7 +1079,7 @@ void ActionManager::createFileMenu()
   exportMenu.addItem(createMenuAction(
     IO::Path("Menu/File/Export/Haru..."),
     QObject::tr("Haru..."),
-    0,
+    Qt::CTRL | Qt::SHIFT | Qt::Key_E,
     [](ActionExecutionContext& context) { context.frame()->exportDocumentAsHaru(); },
     [](ActionExecutionContext& context) { return context.hasDocument(); }));
 
