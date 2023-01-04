@@ -14,8 +14,8 @@
 @PointClass base(PlayerClass) = info_player_start : "Player Start" []
 
 @PointClass size(-16 -16 -16, 16 16 16) color(255 255 0) = light_point : "Point Light" [
-    color(string) : "Light Color" : "1.0 1.0 1.0"
-    range(integer) : "Light Range" : 20
+    color(string) : "Light Color" : "5.0 5.0 5.0"
+    radius(integer) : "Light Radius" : 8
 ]
 
 @SolidClass = func_brush : "Brush" []
