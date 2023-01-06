@@ -34,6 +34,10 @@
     event(string) : "Event" : "onTrigger"
 ]
 
+@SolidClass = trigger_power_sphere : "Power Sphere Trigger" [
+    event(string) : "Event" : "onTrigger"
+]
+
 @PointClass size(-16 -16 -16, 16 16 16) color(255 255 255) = prop_test_model : "Test Model" [
     model(string) : "Model" : "boom_box"
 ]
