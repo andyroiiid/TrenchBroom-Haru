@@ -1,4 +1,4 @@
-@SolidClass = worldspawn : "World entity" [
+@SolidClass = worldspawn : "World Entity" [
     light_direction(string) : "Light Direction" : "0.3 0.4 0.5"
     light_color(string) : "Light Color" : "1.0 1.0 1.0"
     script(string) : "Level Script"
@@ -9,6 +9,16 @@
 @BaseClass = MoveLinear [
     move_speed(string) : "Move Speed" : "0.0 1.0 0.0"
     move_time(float) : "Move Time" : 1.0
+]
+
+@BaseClass = Trigger [
+    type(choices) : "Detected Entity Type" : 0 =
+    [
+        0: "Player"
+        1: "PowerSphere"
+    ]
+
+    event(string) : "Event" : "onTrigger"
 ]
 
 @PointClass base(PlayerClass) = info_player_start : "Player Start" []
@@ -30,13 +40,9 @@
 
 @SolidClass = func_phys : "Physics Brush" []
 
-@SolidClass = trigger_player : "Player Trigger" [
-    event(string) : "Event" : "onTrigger"
-]
+@SolidClass base(Trigger) = trigger_once : "One-time Trigger" []
 
-@SolidClass = trigger_power_sphere : "Power Sphere Trigger" [
-    event(string) : "Event" : "onTrigger"
-]
+@SolidClass base(Trigger) = trigger_multiple : "Multiple-times Trigger" []
 
 @PointClass size(-16 -16 -16, 16 16 16) color(255 255 255) = prop_test_model : "Test Model" [
     model(string) : "Model" : "boom_box"
